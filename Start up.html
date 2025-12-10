@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReBall - Balles de Golf Recyclées Premium</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- 1. VARIABLES & DESIGN SYSTEM --- */
+        :root {
+            --primary-green: #27ae60;    /* Vert Action */
+            --forest-green: #1e3a28;     /* Vert Premium Foncé */
+            --mint-green: #e8f8f5;       /* Vert très clair (Fond) */
+            --text-dark: #2c3e50;
+            --white: #ffffff;
+            --accent-gold: #f1c40f;      /* Étoiles */
+            --shadow-soft: 0 10px 30px rgba(0,0,0,0.08); /* Ombre douce */
+            --shadow-hover: 0 15px 40px rgba(0,0,0,0.15); /* Ombre survol */
+        }
+
+        /* --- 2. RESET & BASES --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            color: var(--text-dark);
+            background-color: #fcfcfc;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Bloquer le scroll quand la modale est ouverte */
+        body.modal-open { overflow: hidden; }
+
+        h1, h2, h3, h4 { font-family: 'Montserrat', sans-serif; font-weight: 700; }
+        a { text-decoration: none; transition: all 0.3s ease; }
+        ul { list-style: none; }
+        button { cursor: pointer; font-family: 'Montserrat', sans-serif; }
+
+        /* --- 3. NAVBAR --- */
+        nav {
+            background: var(--white);
+            padding: 15px 5%;
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 1000;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        }
+
+        .logo-img { height: 100px; width: auto; display: block; }
+
+        .nav-links { display: flex; gap: 30px; align-items: center; }
+        .nav-links a { color: var(--forest-green); font-weight: 600; font-size: 0.95rem; }
+        .nav-links a:hover { color: var(--primary-green); }
+
+        .cart-btn {
+            background: var(--forest-green); color: white !important;
+            padding: 10px 25px; border-radius: 50px; display: flex; align-items: center; gap: 8px;
+        }
+        .cart-btn:hover { background: var(--primary-green); }
+
+        /* --- 4. HERO HEADER --- */
+        .hero {
+            position: relative; height: 75vh;
+            background: linear-gradient(rgba(20, 40, 30, 0.5), rgba(20, 40, 30, 0.4)),
+                        url('https://images.unsplash.com/photo-1535131749006-b7f58c99034b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');
+            background-size: cover; background-position: center;
+            display: flex; align-items: center; justify-content: center;
+            text-align: center; color: white;
+        }
+
+        .hero-content { max-width: 850px; padding: 20px; animation: fadeIn 1s ease-out; }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 20px; text-transform: uppercase; text-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .hero p { font-size: 1.3rem; margin-bottom: 40px; font-weight: 400; opacity: 0.95; }
+
+        .btn-cta {
+            background-color: var(--primary-green); color: white;
+            padding: 18px 45px; font-size: 1.1rem; font-weight: 700;
+            border-radius: 50px; box-shadow: 0 10px 25px rgba(39, 174, 96, 0.4);
+        }
+        .btn-cta:hover { transform: translateY(-3px); background-color: #2ecc71; }
+
+        /* --- 5. REASSURANCE & IMPACT --- */
+        .reassurance-bar { background: white; padding: 30px 5%; border-bottom: 1px solid #eee; }
+        .reassurance-grid { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px; }
+        .rea-item { display: flex; align-items: center; gap: 15px; }
+        .rea-item i { font-size: 1.8rem; color: var(--forest-green); }
+        .rea-item h4 { font-size: 0.95rem; margin-bottom: 2px; }
+        .rea-item p { font-size: 0.85rem; color: #7f8c8d; margin: 0; }
+
+        .impact-section { background-color: var(--forest-green); color: white; padding: 80px 20px; text-align: center; }
+        .impact-grid { max-width: 1100px; margin: 50px auto 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; }
+        .impact-item i { font-size: 3rem; color: #4ade80; margin-bottom: 20px; }
+        .impact-number { font-size: 3rem; font-weight: 800; display: block; margin-bottom: 5px; font-family: 'Montserrat'; }
+
+        /* --- 6. PROCESSUS --- */
+        .process-section { padding: 90px 20px; background: white; text-align: center; }
+        .section-title { font-size: 2.2rem; color: var(--forest-green); margin-bottom: 15px; }
+        .section-subtitle { color: var(--primary-green); text-transform: uppercase; font-weight: 700; letter-spacing: 2px; font-size: 0.9rem; }
+        
+        .process-steps { display: flex; justify-content: center; gap: 50px; max-width: 1200px; margin: 60px auto 0; flex-wrap: wrap; }
+        .step-card { flex: 1; min-width: 280px; }
+        .step-icon-circle {
+            width: 90px; height: 90px; background: var(--mint-green); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 25px; color: var(--primary-green); font-size: 2rem;
+        }
+
+        /* --- 7. BOUTIQUE (SHOP) --- */
+        .shop-section { padding: 90px 20px; background: #f9f9f9; max-width: 1300px; margin: 0 auto; }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 40px; margin-top: 50px; }
+
+        .product-card {
+            background: white; border-radius: 20px; overflow: hidden;
+            transition: all 0.3s ease; box-shadow: var(--shadow-soft);
+            position: relative; border: 1px solid rgba(0,0,0,0.03);
+        }
+        .product-card:hover { transform: translateY(-10px); box-shadow: var(--shadow-hover); }
+
+        .badge-eco {
+            position: absolute; top: 20px; left: 20px;
+            background: var(--primary-green); color: white;
+            padding: 5px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 700; z-index: 10;
+        }
+
+        .product-img-wrapper {
+            height: 280px; width: 100%;
+            display: flex; align-items: center; justify-content: center;
+            background: white; padding: 20px;
+        }
+        /* Style des images balles avec ombre portée */
+        .product-img-wrapper img {
+            max-width: 90%; max-height: 90%; object-fit: contain;
+            filter: drop-shadow(0 15px 15px rgba(0,0,0,0.15));
+            transition: transform 0.4s ease;
+        }
+        .product-card:hover .product-img-wrapper img { transform: scale(1.08); }
+
+        .product-info { padding: 25px; text-align: center; }
+        .product-brand { color: #95a5a6; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .product-title { font-size: 1.25rem; margin-bottom: 10px; color: var(--text-dark); }
+        
+        .price-box { margin-bottom: 20px; display: flex; justify-content: center; align-items: baseline; gap: 10px; }
+        .price-current { color: var(--forest-green); font-size: 1.5rem; font-weight: 800; }
+        .price-old { text-decoration: line-through; color: #bdc3c7; font-size: 1rem; }
+
+        .btn-add-cart {
+            width: 100%; padding: 14px;
+            background-color: var(--text-dark); color: white;
+            border: none; border-radius: 12px; font-weight: 600;
+            transition: background 0.3s;
+        }
+        .btn-add-cart:hover { background-color: var(--primary-green); }
+
+        /* --- 8. AVIS & SOCIAL --- */
+        .reviews-section { padding: 90px 20px; background: white; text-align: center; }
+        .reviews-grid { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-top: 50px; max-width: 1200px; margin-left: auto; margin-right: auto; }
+        .review-card { background: #f8fcfb; padding: 35px; border-radius: 15px; box-shadow: var(--shadow-soft); flex: 1; min-width: 300px; text-align: left; }
+        .stars { color: var(--accent-gold); margin-bottom: 15px; }
+        .review-text { font-style: italic; color: #555; margin-bottom: 20px; font-size: 0.95rem; }
+        .review-author { font-weight: 700; color: var(--forest-green); display: flex; align-items: center; gap: 10px; }
+
+        .social-section { background: linear-gradient(135deg, var(--forest-green), #0f2619); color: white; padding: 70px 20px; text-align: center; }
+        .social-icons-container { margin-top: 30px; display: flex; justify-content: center; gap: 20px; }
+        .social-btn {
+            width: 55px; height: 55px; background: rgba(255,255,255,0.1); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 1.5rem; transition: all 0.3s;
+        }
+        .social-btn:hover { background: var(--primary-green); transform: scale(1.1); }
+
+        /* --- 9. MODALE (POP-UP) STYLES --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); z-index: 2000;
+            display: none; justify-content: center; align-items: center;
+            opacity: 0; transition: opacity 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        .modal-overlay.active { display: flex; opacity: 1; }
+
+        .modal-content {
+            background: white; width: 95%; max-width: 1000px;
+            border-radius: 20px; overflow: hidden;
+            display: grid; grid-template-columns: 1fr 1fr;
+            position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            max-height: 90vh; overflow-y: auto;
+            animation: slideIn 0.3s ease;
+        }
+
+        .modal-close {
+            position: absolute; top: 15px; right: 20px;
+            background: none; border: none; font-size: 2rem;
+            color: #999; cursor: pointer; z-index: 10;
+        }
+        .modal-close:hover { color: var(--text-dark); }
+
+        .modal-image-col {
+            background: #f4f4f4; display: flex; align-items: center; justify-content: center; padding: 40px;
+        }
+        .modal-image-col img { max-width: 100%; max-height: 400px; filter: drop-shadow(0 20px 30px rgba(0,0,0,0.2)); }
+
+        .modal-details-col { padding: 40px; display: flex; flex-direction: column; }
+        .modal-title { font-size: 2rem; margin-bottom: 10px; line-height: 1.2; color: var(--forest-green); }
+        .modal-price { font-size: 1.8rem; color: var(--primary-green); font-weight: 800; margin-bottom: 20px; }
+        .modal-description { color: #666; margin-bottom: 30px; line-height: 1.6; }
+
+        .modal-variants { margin-bottom: 30px; }
+        .variant-group { margin-bottom: 20px; }
+        .variant-label { display: block; font-weight: 700; margin-bottom: 8px; font-size: 0.9rem; text-transform: uppercase; }
+        .variant-select {
+            width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 8px;
+            font-family: 'Open Sans', sans-serif; font-size: 1rem; cursor: pointer;
+        }
+        .variant-select:focus { border-color: var(--primary-green); outline: none; }
+
+        .modal-review-box { background: #f9fffb; border: 1px solid #e0f2e9; padding: 15px; border-radius: 10px; margin-top: auto; margin-bottom: 20px; }
+        .review-mini-text { font-style: italic; font-size: 0.9rem; color: #555; }
+        
+        .btn-modal-add {
+            width: 100%; padding: 18px; background: var(--forest-green); color: white;
+            border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 700;
+            display: flex; justify-content: center; gap: 10px; transition: background 0.3s;
+        }
+        .btn-modal-add:hover { background: var(--primary-green); }
+
+        /* --- FOOTER --- */
+        footer { background: #111; color: white; padding: 50px 20px 20px; text-align: center; }
+        .copyright { color: #555; font-size: 0.8rem; border-top: 1px solid #222; padding-top: 20px; }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.2rem; }
+            .nav-links { display: none; }
+            .modal-content { grid-template-columns: 1fr; }
+            .modal-image-col { height: 250px; padding: 20px; }
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideIn { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="#">
+            <img src="logo.png" alt="ReBall Logo" class="logo-img">
+        </a>
+        <div class="nav-links">
+            <a href="#shop">Boutique</a>
+            <a href="#process">Concept</a>
+            <a href="#reviews">Avis</a>
+            <a href="#" class="cart-btn"><i class="fas fa-shopping-basket"></i> Panier (0)</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1>La performance à prix recyclé</h1>
+            <p>Rejoignez la révolution verte du golf. Les meilleures balles récupérées, nettoyées et reclassées. Moins cher pour vous, meilleur pour la planète.</p>
+            <a href="#shop" class="btn-cta">Voir les balles</a>
+        </div>
+    </header>
+
+    <div class="reassurance-bar">
+        <div class="reassurance-grid">
+            <div class="rea-item"><i class="fas fa-truck-fast"></i><div><h4>Livraison Rapide</h4><p>Expédié en 24h/48h</p></div></div>
+            <div class="rea-item"><i class="fas fa-leaf"></i><div><h4>100% Écologique</h4><p>0 plastique neuf</p></div></div>
+            <div class="rea-item"><i class="fas fa-star"></i><div><h4>Qualité Garantie</h4><p>Satisfait ou remboursé</p></div></div>
+        </div>
+    </div>
+
+    <section class="impact-section">
+        <h2 style="font-size: 2.5rem;">L'Impact du Golf</h2>
+        <div class="impact-grid">
+            <div class="impact-item"><i class="fas fa-globe-europe"></i><span class="impact-number">400M</span><span>balles perdues / an</span></div>
+            <div class="impact-item"><i class="fas fa-hourglass-half"></i><span class="impact-number">500 ans</span><span>de décomposition</span></div>
+            <div class="impact-item"><i class="fas fa-wallet"></i><span class="impact-number">-50%</span><span>d'économie</span></div>
+        </div>
+    </section>
+
+    <section id="process" class="process-section">
+        <span class="section-subtitle">Notre cycle vertueux</span>
+        <h2 class="section-title">De l'étang à votre Driver</h2>
+        <div class="process-steps">
+            <div class="step-card">
+                <div class="step-icon-circle"><i class="fas fa-water"></i></div>
+                <h3>1. Récupération</h3>
+                <p style="color:#666; margin-top:10px;">Plongée en étangs et lacs de golf.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-icon-circle"><i class="fas fa-soap"></i></div>
+                <h3>2. Eco-Nettoyage</h3>
+                <p style="color:#666; margin-top:10px;">Lavage sans produits agressifs.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-icon-circle"><i class="fas fa-microscope"></i></div>
+                <h3>3. Tri Expert</h3>
+                <p style="color:#666; margin-top:10px;">Sélection manuelle Grade Pearl & A.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="shop" class="shop-section">
+        <div style="text-align: center;">
+            <span class="section-subtitle">Sélection Premium</span>
+            <h2 class="section-title">Nos Best-Sellers</h2>
+        </div>
+
+        <div class="products-grid">
+            
+            <div class="product-card">
+                <span class="badge-eco">Top Vente</span>
+                <div class="product-img-wrapper">
+                    <img src="Pro V1.png" alt="Titleist Pro V1">
+                </div>
+                <div class="product-info">
+                    <div class="product-brand">Titleist</div>
+                    <h3 class="product-title">Pro V1</h3>
+                    <div class="price-box">
+                        <span class="price-current">34.90€</span>
+                        <span class="price-old">59.00€</span>
+                    </div>
+                    <button class="btn-add-cart" 
+                        data-title="Titleist Pro V1" 
+                        data-price="34.90" 
+                        data-img="Pro V1.png"
+                        data-desc="La balle n°1 du golf. Performance totale pour tous les joueurs. Toucher très doux et vol pénétrant. Idéal pour ceux qui cherchent la précision absolue sur le green."
+                        data-review="La meilleure balle que j'ai jouée en recyclé. Impossible de voir la différence avec du neuf. - Marc D.">
+                        Ajouter au panier
+                    </button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-img-wrapper">
+                    <img src="Taylormade_TP5pixballerecto.jpg-removebg-preview.png" alt="TaylorMade TP5">
+                </div>
+                <div class="product-info">
+                    <div class="product-brand">TaylorMade</div>
+                    <h3 class="product-title">TP5 Pix</h3>
+                    <div class="price-box">
+                        <span class="price-current">32.50€</span>
+                        <span class="price-old">58.00€</span>
+                    </div>
+                    <button class="btn-add-cart" 
+                        data-title="TaylorMade TP5 Pix" 
+                        data-price="32.50" 
+                        data-img="Taylormade_TP5pixballerecto.jpg-removebg-preview.png"
+                        data-desc="La TP5 est la balle de tour la plus complète. La technologie Pix (motifs) offre une meilleure visibilité et aide à l'alignement sur le green."
+                        data-review="Les motifs Pix sont nickels. Super qualité pour du grade A. Je recommande. - Thomas L.">
+                        Ajouter au panier
+                    </button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <span class="badge-eco">-45%</span>
+                <div class="product-img-wrapper">
+                    <img src="Callaway_ChromeSoftballerecto1.jpg-removebg-preview.png" alt="Callaway Chrome Soft">
+                </div>
+                <div class="product-info">
+                    <div class="product-brand">Callaway</div>
+                    <h3 class="product-title">Chrome Soft</h3>
+                    <div class="price-box">
+                        <span class="price-current">29.90€</span>
+                        <span class="price-old">55.00€</span>
+                    </div>
+                    <button class="btn-add-cart" 
+                        data-title="Callaway Chrome Soft" 
+                        data-price="29.90" 
+                        data-img="Callaway_ChromeSoftballerecto1.jpg-removebg-preview.png"
+                        data-desc="Toucher ultra doux et distance maximale. La Chrome Soft est parfaite pour les joueurs cherchant un confort de frappe exceptionnel et de la tolérance."
+                        data-review="Livraison super rapide et balles très propres. Très bon geste pour la planète. - Sarah P.">
+                        Ajouter au panier
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="reviews" class="reviews-section">
+        <h2 class="section-title">Ils ont testé ReBall</h2>
+        <div class="reviews-grid">
+            <div class="review-card">
+                <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                <p class="review-text">"Honnêtement bluffé. J'ai pris des Pro V1 grade Pearl, impossible de voir la différence avec des neuves."</p>
+                <div class="review-author"><i class="fas fa-check-circle"></i> Thomas D.</div>
+            </div>
+            <div class="review-card">
+                <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div>
+                <p class="review-text">"Livraison rapide et emballage soigné. J'aime le concept écologique, je ne joue plus qu'avec ça."</p>
+                <div class="review-author"><i class="fas fa-check-circle"></i> Sophie L.</div>
+            </div>
+            <div class="review-card">
+                <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                <p class="review-text">"Le mix de balles d'entraînement est top pour débuter sans se ruiner."</p>
+                <div class="review-author"><i class="fas fa-check-circle"></i> Marc P.</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="social-section">
+        <h2 style="font-family: Montserrat;">Suivez nos aventures</h2>
+        <p style="opacity: 0.8; margin-top: 10px;">Plongées, nouveautés et conseils golf.</p>
+        <div class="social-icons-container">
+            <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-btn"><i class="fab fa-tiktok"></i></a>
+            <a href="#" class="social-btn"><i class="fab fa-facebook-f"></i></a>
+        </div>
+    </section>
+
+    <footer>
+        <h2 style="font-weight:800; font-size:1.5rem; margin-bottom:10px; color:white;">ReBall</h2>
+        <p style="color:#888; font-size:0.9rem;">Le golf durable commence ici.</p>
+        <div class="copyright">
+            &copy; 2024 ReBall France. Tous droits réservés.
+        </div>
+    </footer>
+
+    <div class="modal-overlay" id="productModal">
+        <div class="modal-content">
+            <button class="modal-close" id="closeModal">&times;</button>
+            
+            <div class="modal-image-col">
+                <img src="" alt="Produit" id="modalImg">
+            </div>
+            
+            <div class="modal-details-col">
+                <h2 class="modal-title" id="modalTitle">Titre du produit</h2>
+                <div class="modal-price" id="modalPrice">0.00€</div>
+                <p class="modal-description" id="modalDesc">Description...</p>
+
+                <div class="modal-variants">
+                    <div class="variant-group">
+                        <label class="variant-label">État (Grade)</label>
+                        <select class="variant-select">
+                            <option>Pearl (Comme neuve)</option>
+                            <option>Grade A (Très bon état)</option>
+                            <option>Grade B (Bon état - Éco)</option>
+                        </select>
+                    </div>
+
+                    <div class="variant-group">
+                        <label class="variant-label">Quantité</label>
+                        <select class="variant-select" id="qtySelect">
+                            <option value="12">12 Balles (Pack Standard)</option>
+                            <option value="24">24 Balles (Pack Performance)</option>
+                            <option value="48">48 Balles (Pack Expert)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-review-box">
+                    <div class="stars" style="font-size:0.8rem; margin-bottom:5px;"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="review-mini-text" id="modalReviewText">"Avis..."</p>
+                </div>
+
+                <button class="btn-modal-add">
+                    <i class="fas fa-shopping-cart"></i> Ajouter au panier
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sélection des éléments
+        const modal = document.getElementById('productModal');
+        const closeModalBtn = document.getElementById('closeModal');
+        const addToCartBtns = document.querySelectorAll('.btn-add-cart');
+        const body = document.body;
+
+        // Éléments internes de la modale
+        const modalTitle = document.getElementById('modalTitle');
+        const modalImg = document.getElementById('modalImg');
+        const modalPrice = document.getElementById('modalPrice');
+        const modalDesc = document.getElementById('modalDesc');
+        const modalReviewText = document.getElementById('modalReviewText');
+        const qtySelect = document.getElementById('qtySelect');
+        
+        let basePrice = 0; // Prix de base de la douzaine
+
+        // 1. OUVERTURE DE LA MODALE
+        addToCartBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Récupération des données depuis les attributs data-
+                const title = this.getAttribute('data-title');
+                const price = parseFloat(this.getAttribute('data-price'));
+                const img = this.getAttribute('data-img');
+                const desc = this.getAttribute('data-desc');
+                const review = this.getAttribute('data-review');
+
+                // Injection des données
+                modalTitle.textContent = title;
+                modalImg.src = img;
+                modalDesc.textContent = desc;
+                modalReviewText.textContent = `"${review}"`;
+                
+                // Gestion du prix
+                basePrice = price;
+                updatePrice(); // Met à jour selon la qté par défaut (12)
+
+                // Affichage
+                modal.classList.add('active');
+                body.classList.add('modal-open');
+            });
+        });
+
+        // 2. MISE A JOUR PRIX DYNAMIQUE
+        qtySelect.addEventListener('change', updatePrice);
+
+        function updatePrice() {
+            const qty = parseInt(qtySelect.value);
+            let finalPrice = basePrice;
+            
+            // Logique de calcul (Simulation de réduction)
+            if (qty === 24) finalPrice = (basePrice * 2) * 0.9; // 10% de remise
+            if (qty === 48) finalPrice = (basePrice * 4) * 0.85; // 15% de remise
+            
+            modalPrice.textContent = finalPrice.toFixed(2) + '€';
+        }
+
+        // 3. FERMETURE
+        closeModalBtn.addEventListener('click', closePopup);
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) closePopup();
+        });
+
+        function closePopup() {
+            modal.classList.remove('active');
+            body.classList.remove('modal-open');
+            qtySelect.value = "12"; // Reset
+        }
+    </script>
+
+</body>
+</html>
